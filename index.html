@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ទម្រង់ចុះឈ្មោះអ្នកជំងឺ - Dental EMR</title>
+  <!-- Google Fonts for Khmer & Latin -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #cbd5e1;
+      --border-focus: #38bdf8;
+      --danger: #ef4444;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Kantumruy Pro', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding: 2rem 1rem;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: white;
+      padding: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .meta-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      backdrop-filter: blur(4px);
+    }
+
+    form {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .required {
+      color: var(--danger);
+    }
+
+    input, select, textarea {
+      font-family: inherit;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      outline: none;
+      font-size: 0.95rem;
+      background-color: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    /* Checkbox & Radio Style */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.75rem;
+      background: #f8fafc;
+      padding: 1rem;
+      border-radius: var(--radius);
+      border: 1px solid #e2e8f0;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .checkbox-item input {
+      width: 1.15rem;
+      height: 1.15rem;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Canvas Signature Area */
+    .signature-pad-container {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      background-color: #fdfdfd;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      height: 150px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .clear-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #fee2e2;
+      color: #b91c1c;
+      border: none;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .clear-btn:hover {
+      background: #fecaca;
+    }
+
+    /* Action Buttons */
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.75rem 1.75rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Print Preview Friendly */
+    @media print {
+      body { background: white; padding: 0; }
+      .container { border: none; box-shadow: none; max-width: 100%; }
+      .form-actions, .clear-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div>
+      <h1>គ្លីនិកទន្តសាស្ត្រស្តង់ដារ (Dental Clinic)</h1>
+      <p style="font-size: 0.9rem; opacity: 0.9;">ទម្រង់ចុះឈ្មោះអ្នកជំងឺថ្មី (New Patient Registration Form)</p>
+    </div>
+    <div class="meta-badge">
+      MRN: <strong id="autoMRN">DNT-2026-001</strong>
+    </div>
+  </header>
+
+  <form id="patientForm">
+    <!-- ១. ព័ត៌មានផ្ទាល់ខ្លួន -->
+    <section>
+      <div class="section-title">១. ព័ត៌មានផ្ទាល់ខ្លួន (Demographics)</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>គោត្តនាម-នាម (ខ្មែរ) <span class="required">*</span></label>
+          <input type="text" name="name_kh" placeholder="ឧ. សុខ សាន្ត" required>
+        </div>
+        <div class="form-group">
+          <label>Full Name (English) <span class="required">*</span></label>
+          <input type="text" name="name_en" placeholder="e.g. SOK SANT" style="text-transform: uppercase;" required>
+        </div>
+        <div class="form-group">
+          <label>ភេទ <span class="required">*</span></label>
+          <select name="gender" required>
+            <option value="">-- ជ្រើសរើស --</option>
+            <option value="Male">ប្រុស (Male)</option>
+            <option value="Female">ស្រី (Female)</option>
+            <option value="Other">ផ្សេងៗ (Other)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>ថ្ងៃខែឆ្នាំកំណើត <span class="required">*</span></label>
+          <input type="date" name="dob" required>
+        </div>
+        <div class="form-group">
+          <label>លេខទូរស័ព្ទចម្បង <span class="required">*</span></label>
+          <input type="tel" name="phone" placeholder="012 345 678" required>
+        </div>
+        <div class="form-group">
+          <label>អ៊ីមែល (Email)</label>
+          <input type="email" name="email" placeholder="example@mail.com">
+        </div>
+        <div class="form-group">
+          <label>មុខរបរ (Occupation)</label>
+          <input type="text" name="occupation" placeholder="ឧ. បុគ្គលិកក្រុមហ៊ុន">
+        </div>
+        <div class="form-group">
+          <label>លេខអត្តសញ្ញាណប័ណ្ណ / Passport</label>
+          <input type="text" name="national_id" placeholder="ID Number">
+        </div>
+        <div class="form-group full-width">
+          <label>អាសយដ្ឋានបច្ចុប្បន្ន (Current Address)</label>
+          <input type="text" name="address" placeholder="ផ្ទះលេខ, ផ្លូវ, សង្កាត់/ឃុំ, ខណ្ឌ/ស្រុក, រាជធានី/ខេត្ត">
+        </div>
+      </div>
+    </section>
+
+    <!-- ២. ទំនាក់ទំនងពេលមានអាសន្ន -->
+    <section>
+      <div class="section-title">២. ទំនាក់ទំនងពេលមានអាសន្ន (Emergency Contact)</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>ឈ្មោះអ្នកទំនាក់ទំនង <span class="required">*</span></label>
+          <input type="text" name="emergency_name" placeholder="ឈ្មោះសាច់ញាតិ" required>
+        </div>
+        <div class="form-group">
+          <label>ត្រូវជា (Relationship) <span class="required">*</span></label>
+          <input type="text" name="emergency_relationship" placeholder="ឧ. ឪពុក, ម្ដាយ, ប្ដី, ប្រពន្ធ" required>
+        </div>
+        <div class="form-group">
+          <label>លេខទូរស័ព្ទបន្ទាន់ <span class="required">*</span></label>
+          <input type="tel" name="emergency_phone" placeholder="012 345 678" required>
+        </div>
+      </div>
+    </section>
+
+    <!-- ៣. ប្រវត្តិវេជ្ជសាស្ត្រទូទៅ -->
+    <section>
+      <div class="section-title">៣. ប្រវត្តិសុខភាពទូទៅ (Medical History)</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">សូមគូសធីកលើជំងឺ ឬស្ថានភាពសុខភាពដែលអ្នកធ្លាប់មាន ឬកំពុងមាន៖</p>
+      
+      <div class="checkbox-grid">
+        <label class="checkbox-item">
+          <input type="checkbox" name="conditions" value="Hypertension"> លើសឈាម (Hypertension)
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="conditions" value="Heart Disease"> ជំងឺបេះដូង (Heart Disease)
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="conditions" value="Diabetes"> ទឹកនោមផ្អែម (Diabetes)
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="conditions" value="Bleeding Disorder"> ឈាមកកមិនបាន (Bleeding Disorder)
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="conditions" value="Asthma"> ហឺត / ផ្លូវដង្ហើម (Asthma)
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="conditions" value="Hepatitis"> ថ្លើម / តម្រងនោម (Hepatitis/Kidney)
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="conditions" value="Pregnancy"> កំពុងមានផ្ទៃពោះ (Pregnancy)
+        </label>
+      </div>
+
+      <div class="form-grid" style="margin-top: 1rem;">
+        <div class="form-group">
+          <label>ប្រវត្តិប្រតិកម្មថ្នាំ ឬចំណីអាហារ (Allergies)</label>
+          <input type="text" name="allergies" placeholder="ឧ. អាលែហ្ស៊ីថ្នាំស្ពឹក, Penicillin, ជ័រស្រោមដៃ (Latex)">
+        </div>
+        <div class="form-group">
+          <label>ថ្នាំកំពុងប្រើប្រាស់ប្រចាំថ្ងៃ (Current Medications)</label>
+          <input type="text" name="medications" placeholder="ឧ. ថ្នាំពង្រាវឈាម (Aspirin), សម្ពាធឈាម">
+        </div>
+      </div>
+    </section>
+
+    <!-- ៤. ប្រវត្តិមាត់ធ្មេញ -->
+    <section>
+      <div class="section-title">៤. ប្រវត្តិនៃការព្យាបាលធ្មេញ (Dental History)</div>
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label>មូលហេតុចម្បងដែលមកពិនិត្យថ្ងៃនេះ (Chief Complaint) <span class="required">*</span></label>
+          <textarea rows="2" name="chief_complaint" placeholder="ឧ. ឈឺធ្មេញថ្គាមខាងស្តាំ, ចង់សម្អាតកំបោរធ្មេញ, ចង់ពត់ធ្មេញ..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>កាលបរិច្ឆេទជួបទន្តពេទ្យចុងក្រោយ</label>
+          <input type="date" name="last_dental_visit">
+        </div>
+        <div class="form-group">
+          <label>ធ្លាប់មានបញ្ហាជាមួយថ្នាំស្ពឹកធ្មេញដែរឬទេ?</label>
+          <select name="anesthesia_reaction">
+            <option value="No">ទេ (No)</option>
+            <option value="Yes">ធ្លាប់មានបញ្ហា (Yes)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- ៥. ការយល់ព្រម និងហត្ថលេខាឌីជីថល -->
+    <section>
+      <div class="section-title">៥. ការយល់ព្រម និងហត្ថលេខា (Consent & Signature)</div>
+      <p style="font-size: 0.85rem; color: #475569; line-height: 1.6; margin-bottom: 1rem; background: #f1f5f9; padding: 0.75rem; border-radius: 6px;">
+        ខ្ញុំសូមបញ្ជាក់ថា រាល់ព័ត៌មានដែលបានផ្តល់ជូនខាងលើពិតជាត្រឹមត្រូវ។ ខ្ញុំយល់ព្រមឱ្យទន្តពេទ្យពិនិត្យ ថតកាំរស្មីអ៊ិច (X-Ray) និងពិគ្រោះយោបល់អំពីផែនការព្យាបាល។
+      </p>
+      
+      <div class="form-group">
+        <label>ហត្ថលេខាអ្នកជំងឺ ឬអាណាព្យាបាល (Digital Signature) <span class="required">*</span></label>
+        <div class="signature-pad-container">
+          <canvas id="signatureCanvas"></canvas>
+          <button type="button" class="clear-btn" id="clearSigBtn">លុបហត្ថលេខា</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ប៊ូតុងសកម្មភាព -->
+    <div class="form-actions">
+      <button type="reset" class="btn btn-secondary" id="resetBtn">កំណត់ឡើងវិញ (Reset)</button>
+      <button type="button" class="btn btn-secondary" onclick="window.print()">បោះពុម្ព (Print)</button>
+      <button type="submit" class="btn btn-primary">រក្សាទុកទិន្នន័យ (Submit EMR)</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // បង្កើត Patient Code (MRN) ដោយស្វ័យប្រវត្តិតាមឆ្នាំ និងលេខចៃដន្យ
+  const currentYear = new Date().getFullYear();
+  const randomNum = Math.floor(1000 + Math.random() * 9000);
+  document.getElementById('autoMRN').textContent = `DNT-${currentYear}-${randomNum}`;
+
+  // Signature Canvas Handling
+  const canvas = document.getElementById('signatureCanvas');
+  const ctx = canvas.getContext('2d');
+  let isDrawing = false;
+  let hasSigned = false;
+
+  // កំណត់ទំហំ Canvas ឱ្យច្បាស់តាម Resolution របស់អេក្រង់
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#0f172a';
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function startDrawing(e) {
+    isDrawing = true;
+    hasSigned = true;
+    draw(e);
+  }
+
+  function stopDrawing() {
+    isDrawing = false;
+    ctx.beginPath();
+  }
+
+  function draw(e) {
+    if (!isDrawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+    const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+
+  // Mouse Events
+  canvas.addEventListener('mousedown', startDrawing);
+  canvas.addEventListener('mousemove', draw);
+  window.addEventListener('mouseup', stopDrawing);
+
+  // Touch Events for Tablet / Phone
+  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDrawing(e); }, { passive: false });
+  canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
+  canvas.addEventListener('touchend', stopDrawing);
+
+  // Clear Signature
+  document.getElementById('clearSigBtn').addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasSigned = false;
+  });
+
+  // Submit Handler (បង្ហាញលទ្ធផលទិន្នន័យជា JSON សម្រាប់ភ្ជាប់ API)
+  document.getElementById('patientForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    if (!hasSigned) {
+      alert('សូមមេត្តាចុះហត្ថលេខាឌីជីថលមុនពេលរក្សាទុក!');
+      return;
+    }
+
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+    
+    // ចាប់យកទិន្នន័យ Checkbox ជា Array
+    data.conditions = formData.getAll('conditions');
+    
+    // បម្លែងហត្ថលេខាទៅជា Base64 Image
+    data.signature_image = canvas.toDataURL('image/png');
+    data.mrn = document.getElementById('autoMRN').textContent;
+
+    console.log('Dental EMR Patient Data Ready for Backend API:', data);
+    alert('ទិន្នន័យបានបញ្ចូលជោគជ័យ! អ្នកអាចពិនិត្យទិន្នន័យ JSON នៅក្នុង DevTools Console (F12)។');
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasSigned = false;
+  });
+</script>
+
+</body>
+</html>
